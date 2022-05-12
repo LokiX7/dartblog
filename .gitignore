@@ -3,3 +3,6 @@ env/
 __pycache__/
 *.sh
 siteblog/static/
+siteblog/django_cache/
+siteblog/media/
+siteblog/db.sqlite3
