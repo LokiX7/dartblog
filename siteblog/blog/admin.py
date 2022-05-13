@@ -37,7 +37,7 @@ class PostAdmin(admin.ModelAdmin):
         'created_at',
         'views',
         'rating',
-        'is_published',
+        'status',
         'get_preview',
     )
 
@@ -47,7 +47,7 @@ class PostAdmin(admin.ModelAdmin):
 
     list_filter = (
         'category',
-        'is_published',
+        'status',
     )
     
     fields = (
@@ -57,9 +57,9 @@ class PostAdmin(admin.ModelAdmin):
         'content',
         'tags',
         'get_image',
-        'photo',
+        'image',
         'author',
-        'is_published',
+        'status',
         'views',
         'rating',
         'created_at',
@@ -72,34 +72,42 @@ class PostAdmin(admin.ModelAdmin):
         'get_preview',
         'created_at',
     ]
-    actions = ['make_selected_published', 'make_selected_unpublished']
 
     def get_image(self, obj):
         """Get image for post create form"""
-        if obj.photo:
-            return mark_safe(f"<img src='{obj.photo.url}' width='250' height=250>")
+        if obj.image:
+            return mark_safe(f"<img src='{obj.image.url}' width='250' height=250>")
         
         else:
             return '-'
 
     def get_preview(self, obj):
         """Get image for admin display"""
-        if obj.photo:
-            return mark_safe(f"<img src='{obj.photo.url}' width='50' height=50>")
+        if obj.image:
+            return mark_safe(f"<img src='{obj.image.url}' width='25' height=25>")
         
         else:
             return '-'
 
     get_preview.short_description = 'image'
+    
+    actions = [
+        'make_selected_published', 
+        'make_selected_pinned',
+        'make_selected_unpublished',
+    ]
 
     def make_selected_published(self, request, queryset):
         """Make post published"""
-        queryset.update(is_published=True)
+        queryset.update(status=Post.PUBLISHED)
+
+    def make_selected_pinned(self, request, queryset):
+        """Make post published and pinned"""
+        queryset.update(status=Post.PINNED)
 
     def make_selected_unpublished(self, request, queryset):
         """Make post unpublished"""
-        queryset.update(is_published=False)
-
+        queryset.update(status=Post.UNPUBLISHED)
 
 
 admin.site.register(Category, CategoryAdmin)
