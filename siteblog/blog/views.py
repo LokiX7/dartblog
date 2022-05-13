@@ -1,23 +1,25 @@
 from django.shortcuts import render
 
-from blog.services import BaseIndex, get_posts_by_category, get_category
+from blog import services
 
-class Index(BaseIndex):
+class Index(services.BaseIndexView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Home'
         return context
 
-class ByCategory(BaseIndex):
+
+class ByCategory(services.BaseIndexView):
     template_name = 'blog/category.html'
-    allow_empty = False
+    allow_empty = True
     
     def get_queryset(self, **kwargs):
-        return get_posts_by_category(self.kwargs['slug'])
+        super().get_queryset(**kwargs)
+        return services.get_posts_by_category(self.kwargs['slug'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = get_category(self.kwargs['slug']).title
+        context['title'] = services.get_category(self.kwargs['slug']).title
         return context
 
 
