@@ -42,7 +42,8 @@ class Post(models.Model):
     image = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
     views = models.IntegerField('views', default=0)
     rating = models.IntegerField('rating', default=0)
-    
+    is_published = models.BooleanField('is published', default=False)
+
     category = models.ForeignKey(
         Category, 
         on_delete=models.PROTECT,
@@ -53,19 +54,6 @@ class Post(models.Model):
         blank=True,
         related_name='posts'
     )
-    
-    PUBLISHED = 'P'
-    PINNED = 'PP'
-    UNPUBLISHED = 'UP'
-
-    STATUS_CHOICES = (
-        (PUBLISHED, 'Published'),
-        (PINNED, 'Pinned'),
-        (UNPUBLISHED, 'Unpublished'),
-    )
-
-    status = models.CharField('status', max_length=2, choices=STATUS_CHOICES, default='UP')
-
 
     def get_absolute_url(self):
         return reverse_lazy('post', kwargs={'slug': self.slug})
@@ -76,5 +64,5 @@ class Post(models.Model):
     class Meta():
         verbose_name = 'post'
         verbose_name_plural = 'posts'
-        ordering = ['-created_at']
+        ordering = ['-created_at', 'views']
 

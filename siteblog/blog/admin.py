@@ -37,7 +37,7 @@ class PostAdmin(admin.ModelAdmin):
         'created_at',
         'views',
         'rating',
-        'status',
+        'is_published',
         'get_preview',
     )
 
@@ -46,8 +46,9 @@ class PostAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
+        'is_published',
         'category',
-        'status',
+        'tags',
     )
     
     fields = (
@@ -59,7 +60,7 @@ class PostAdmin(admin.ModelAdmin):
         'get_image',
         'image',
         'author',
-        'status',
+        'is_published',
         'views',
         'rating',
         'created_at',
@@ -92,23 +93,18 @@ class PostAdmin(admin.ModelAdmin):
     get_preview.short_description = 'image'
     
     actions = [
-        'make_selected_published', 
-        'make_selected_pinned',
-        'make_selected_unpublished',
+        'make_published',
+        'make_unpublished',
     ]
+    
+    @admin.action(description='Mark selected stories as published')
+    def make_published(self, request, queryset):
+        queryset.update(is_published=True)
 
-    def make_selected_published(self, request, queryset):
-        """Make post published"""
-        queryset.update(status=Post.PUBLISHED)
-
-    def make_selected_pinned(self, request, queryset):
-        """Make post published and pinned"""
-        queryset.update(status=Post.PINNED)
-
-    def make_selected_unpublished(self, request, queryset):
-        """Make post unpublished"""
-        queryset.update(status=Post.UNPUBLISHED)
-
+    @admin.action(description='Mark selected stories as unpublished')
+    def make_unpublished(self, request, queryset):
+        queryset.update(is_published=False)
+        
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)

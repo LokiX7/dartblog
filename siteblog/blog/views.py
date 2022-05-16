@@ -2,24 +2,33 @@ from django.shortcuts import render
 
 from blog import services
 
-class Index(services.BaseIndexView):
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Home'
-        return context
+class Home(services.BaseIndexView):
+    title = 'Home'
 
 
-class ByCategory(services.BaseIndexView):
-    template_name = 'blog/category.html'
+class ByCategory(services.BaseIndexView):   
     allow_empty = True
     
-    def get_queryset(self, **kwargs):
-        super().get_queryset(**kwargs)
-        return services.get_posts_by_category(self.kwargs['slug'])
+    def get_queryset(self):
+        category = services.get_category(self.kwargs['slug'])
+        self.title = category.title
+        return services.get_pub_posts_by_category(category)
 
+
+class ByTag(services.BaseIndexView):   
+    allow_empty = True
+    
+    def get_queryset(self):
+        tag = services.get_tag(self.kwargs['slug'])
+        self.title = tag.title
+        return services.get_pub_posts_by_tag(tag)
+
+
+class GetPost(services.BaseSingleView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = services.get_category(self.kwargs['slug']).title
+        context['tags'] = services.get_tags()
+        services.increase_post_views(self.object, 1)
         return context
 
 

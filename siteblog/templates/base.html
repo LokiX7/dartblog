@@ -24,8 +24,9 @@
     {% cache 60 header %}
     {% include 'inc/_header.html' %}  
     {% endcache %}   
-
-    {% block content %}{% endblock %}
+    
+    {% block content %}
+    {% endblock %}
 
     {% cache 60 footer %}
     {% include 'inc/_footer.html' %}  
