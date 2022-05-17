@@ -31,7 +31,7 @@
                         {% endif %}
                         <div class="big-text">
                             <h3><a href="{{ pinned.get_absolute_url }}">{{ pinned.title }}</a></h3>
-                            {{ pinned.content|safe|truncatechars_html:700 }}
+                            {{ pinned.content|safe|truncatewords_html:100}}
                             <h4><span class="date">{{ pinned.created_at|date:"d F Y" }}</span>
                             <span class="author">Posted By: <span class="author-name">{{ pinned.author }}</span></span>
                             </h4>

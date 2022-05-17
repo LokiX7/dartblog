@@ -1,30 +1,5 @@
-from django.db.models import Max, F
-from django.views.generic import ListView, DetailView
+from django.db.models import Max, Count, F
 from .models import Post, Tag, Category
-
-
-class BaseIndexView(ListView):
-    model = Post
-    template_name = 'blog/index.html'
-    context_object_name = 'posts'
-    paginate_by = 3
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = self.title
-        context['pinned'] = context['posts'].first()
-        return context
-
-class BaseSingleView(DetailView):
-    model = Post
-    template_name = 'blog/single.html'
-    context_object_name = 'post'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = self.object.title
-        return context
-
 
 def get_pub_posts():
     """Return QuerySet with published posts"""
@@ -33,6 +8,10 @@ def get_pub_posts():
 def get_category(category_slug):
     """Return category object by slug"""
     return Category.objects.get(slug=category_slug)
+
+def get_categories():
+    """Return QuerySet with all categories"""
+    return Category.objects.all()
 
 def get_pub_posts_by_category(category_obj):
     """Return QuerySet with published posts by category"""
@@ -56,7 +35,10 @@ def increase_post_views(object, value: int) -> None:
     object.save()
     object.refresh_from_db()
 
-#def get_most_rated_post(queryset):
-#    """Return most rated post"""
-#    max_rating = queryset.aggregate(max=Max('rating'))['max']
-#    return queryset.get(rating=max_rating)
+def get_posts_ordering(*args):
+    """Return posts that are sorted by args values"""
+    return Post.objects.order_by(*args)
+
+def get_tags_ordered_by_num_of_posts():
+    """Return tags ordered by num of posts"""
+    return get_tags().annotate(num=Count('posts')).order_by('-num')

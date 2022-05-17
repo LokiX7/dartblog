@@ -1,12 +1,12 @@
 from django.shortcuts import render
 
-from blog import services
+from blog import services, baseViews
 
-class Home(services.BaseIndexView):
+class Home(baseViews.BaseIndexView):
     title = 'Home'
 
 
-class ByCategory(services.BaseIndexView):   
+class ByCategory(baseViews.BaseIndexView):   
     allow_empty = True
     
     def get_queryset(self):
@@ -15,7 +15,7 @@ class ByCategory(services.BaseIndexView):
         return services.get_pub_posts_by_category(category)
 
 
-class ByTag(services.BaseIndexView):   
+class ByTag(baseViews.BaseIndexView):   
     allow_empty = True
     
     def get_queryset(self):
@@ -24,14 +24,10 @@ class ByTag(services.BaseIndexView):
         return services.get_pub_posts_by_tag(tag)
 
 
-class GetPost(services.BaseSingleView):
+class GetPost(baseViews.BaseSingleView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tags'] = services.get_tags()
         services.increase_post_views(self.object, 1)
         return context
-
-
-def foo(request):
-    return render(request, 'blog/index.html')
 

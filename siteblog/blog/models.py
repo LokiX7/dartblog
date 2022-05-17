@@ -64,5 +64,5 @@ class Post(models.Model):
     class Meta():
         verbose_name = 'post'
         verbose_name_plural = 'posts'
-        ordering = ['-created_at', 'views']
+        ordering = ['-created_at', '-views']
 
