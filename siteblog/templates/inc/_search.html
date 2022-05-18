@@ -1,0 +1,6 @@
+{% csrf_token %}
+<form action="{% url 'search' %}" method="get">
+    <input type="text" name="s" id="" placeholder="Search">
+    <input type="submit" value="search">
+</form>
+

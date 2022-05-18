@@ -36,9 +36,14 @@ def increase_post_views(object, value: int) -> None:
     object.refresh_from_db()
 
 def get_posts_ordering(*args):
-    """Return posts that are sorted by args values"""
+    """Return post QuerySet that are sorted by args values"""
     return Post.objects.order_by(*args)
 
 def get_tags_ordered_by_num_of_posts():
-    """Return tags ordered by num of posts"""
+    """Return tag QuerySet ordered by num of posts"""
     return get_tags().annotate(num=Count('posts')).order_by('-num')
+
+def search_posts(title) -> dict:
+    """Search posts by title and return dict with QuerySet and his len"""
+    queryset = Post.objects.filter(title__icontains=title)
+    return {'queryset': queryset, 'count': queryset.count()}

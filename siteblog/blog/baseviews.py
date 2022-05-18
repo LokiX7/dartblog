@@ -25,4 +25,3 @@ class BaseSingleView(DetailView):
         return context
 
 
-

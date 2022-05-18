@@ -1,4 +1,5 @@
 from django import template
+from django.urls import reverse_lazy
 
 from blog import services
 
@@ -14,3 +15,4 @@ def show_tags(cnt=10):
 def show_popular(cnt=3):
     posts = services.get_posts_ordering('-views')[:cnt]
     return {'posts': posts}
+

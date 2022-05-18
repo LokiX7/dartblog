@@ -1,6 +1,10 @@
 {% load static %}
 {% load sidebar %}
 <div class="col-md-4">
+    <div class="newsletter">
+        <h2 class="sidebar-title">Search</h2>
+        {% include 'inc/_search.html' %}
+    </div>
     {% show_popular 6 %}
     <br>
     <div class="sidebar-ads">
@@ -8,11 +12,4 @@
         <p>Place For Your <br> Ad Banner</p>
     </div>
     {% show_tags 25 %}
-    <div class="newsletter">
-        <h2 class="sidebar-title">Subscribe To oUR nEWSLETTER</h2>
-        <form action="#" method="post">
-            <input type="email" name="" id="" placeholder="Email">
-            <input type="submit" value="Subscribe">
-        </form>
-    </div>
 </div>
